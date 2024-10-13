@@ -19,7 +19,7 @@ public:
     }
 
     bool HasParent() const {
-        return Parent;
+        return !Parent.expired();
     }
 
     T& GetValue() {
@@ -47,11 +47,11 @@ public:
     }
 
     TNodePtr GetParent() {
-        return Parent;
+        return Parent.lock();
     }
 
     TNodeConstPtr GetParent() const {
-        return Parent;
+        return Parent.lock();
     }
 
     static TNodePtr CreateLeaf(T value) {
@@ -110,7 +110,7 @@ private:
     T Value;
     TNodePtr Left = nullptr;
     TNodePtr Right = nullptr;
-    TNodePtr Parent = nullptr;
+    std::weak_ptr<TNode<T>> Parent = std::weak_ptr<TNode<T>>();
 
 
     static void SetParent(TNodePtr node, TNodePtr parent) {
